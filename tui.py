@@ -61,7 +61,7 @@ def render_main_content():
 def render_footer():
     current_time = datetime.now().strftime("%H:%M:%S")
     return Panel(
-        f"  {current_time} | Press ':q' to quit | Use 'hjkl' to navigate | Mode: {modes[current_mode]}",
+        f"  {current_time} | Press 'q' to quit | Use 'hjkl' to navigate | Mode: {modes[current_mode]}",
         style="bold blue",
     )
 
@@ -104,12 +104,11 @@ def switch_to_normal_mode(event):
     update_layout()
 
 
-@key_bindings.add(":")
+@key_bindings.add("q")
 def quit_tui(event):
     event.app.exit()
 
 async def run_tui():
-    """Run the Neovim-inspired TUI with rich and prompt_toolkit."""
     global layout
 
     layout.split(
