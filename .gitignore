@@ -1,1 +1,17 @@
 myenv/
+
+prac.spec
+
+tui.spec
+
+dist/
+
+pxlr.egg-info/
+
+build/
+
+__pycache__/
+*.pyc
+
+*.log
+*.bak
