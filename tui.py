@@ -21,7 +21,7 @@ current_mode = "normal"
 
 def render_header():
     return Panel(
-        Text("📜 Aayush's Neovim TUI Clone", justify="center"),
+        Text("fuck", justify="center"),
         style="bold blue",
         title=f"Mode: {modes[current_mode]}",
         title_align="left",
