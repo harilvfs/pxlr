@@ -1,3 +1,4 @@
+import sys
 import os
 import platform
 import psutil
@@ -286,19 +287,48 @@ def manage_packages():
             return
 
 def user_management():
-    console.print(Panel("[bold cyan]User Management[/bold cyan]"))
-    choice = Prompt.ask("Do you want to [bold green](a)dd[/bold green] or [bold red](r)emove[/bold red] a user?", choices=["a", "r"], default="a")
-    
-    if choice == "a":
-        username = Prompt.ask("[bold cyan]Enter username to add[/bold cyan]")
-        result = os.system(f"sudo useradd -m {username} && sudo passwd {username}")
-        if result != 0:
-            console.print("[bold red]Failed to add user. Ensure you have proper permissions.[/bold red]")
-    elif choice == "r":
-        username = Prompt.ask("[bold red]Enter username to remove[/bold red]")
-        result = os.system(f"sudo userdel -r {username}")
-        if result != 0:
-            console.print("[bold red]Failed to remove user. Ensure you have proper permissions.[/bold red]")
+    while True:
+        console.print(Panel("[bold cyan]User Management[/bold cyan]"))
+        choice = Prompt.ask(
+            "Do you want to [bold green](a)dd[/bold green], [bold red](r)emove[/bold red] a user, or [bold yellow](e)xit[/bold yellow]?",
+            choices=["a", "r", "e"],
+            default="e"
+        )
+        
+        if choice == "e":
+            console.print("[bold yellow]Exiting User Management. Goodbye![/bold yellow]")
+            break
+        
+        if choice == "a":
+            username = Prompt.ask("[bold cyan]Enter username to add[/bold cyan]")
+            if not username.isalnum():
+                console.print("[bold red]Invalid username. Only alphanumeric characters are allowed.[/bold red]")
+                continue
+            
+            try:
+                subprocess.run(["sudo", "useradd", "-m", username], check=True)
+                subprocess.run(["sudo", "passwd", username], check=True)
+                console.print(f"[bold green]User '{username}' added successfully![/bold green]")
+            except subprocess.CalledProcessError:
+                console.print("[bold red]Failed to add user. Ensure you have proper permissions and try again.[/bold red]")
+        
+        elif choice == "r":
+            username = Prompt.ask("[bold red]Enter username to remove[/bold red]")
+            if not username.isalnum():
+                console.print("[bold red]Invalid username. Only alphanumeric characters are allowed.[/bold red]")
+                continue
+            
+            try:
+                subprocess.run(["sudo", "userdel", "-r", username], check=True)
+                console.print(f"[bold green]User '{username}' removed successfully![/bold green]")
+            except subprocess.CalledProcessError:
+                console.print("[bold red]Failed to remove user. Ensure you have proper permissions and try again.[/bold red]")
+            try:
+                user_input = input("Enter something (Ctrl+C to interrupt): ")
+                console.print(f"You entered: {user_input}")
+            except KeyboardInterrupt:
+                console.print("\n[bold yellow]User Management interrupted. Exiting gracefully.[/bold yellow]")
+
 
 def run_custom_command():
     command = Prompt.ask("[bold yellow]Enter a custom command to execute[/bold yellow]")
@@ -320,35 +350,71 @@ def filter_processes():
 
 def main():
     while True:
-        clear_screen()
-        display_menu()
-        choice = Prompt.ask("Enter your choice", choices=[str(i) for i in range(1, 12)], default="11")
-        clear_screen()
-        match choice:
-            case "1":
-                system_info()
-            case "2":
-                disk_usage()
-            case "3":
-                network_info()
-            case "4":
-                processes_info()
-            case "5":
-                temperature_monitoring()
-            case "6":
-                manage_packages()
-            case "7":
-                system_info()
-            case "8":
-                user_management()
-            case "9":
-                run_custom_command()
-            case "10":
-                filter_processes()
-            case "11":
-                console.print("[bold red]Exiting...[/bold red]")
-                break
-        console.input("[bold yellow]Press Enter to return to the menu...[/bold yellow]")
+        try:
+            clear_screen()
+            display_menu()
+            choice = Prompt.ask("Enter your choice", choices=[str(i) for i in range(1, 12)], default="11")
+            clear_screen()
+            match choice:
+                case "1":
+                    try:
+                        system_info()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]System Information interrupted. Returning to menu.[/bold yellow]")
+                case "2":
+                    try:
+                        disk_usage()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Disk Usage interrupted. Returning to menu.[/bold yellow]")
+                case "3":
+                    try:
+                        network_info()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Network Information interrupted. Returning to menu.[/bold yellow]")
+                case "4":
+                    try:
+                        processes_info()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Processes Information interrupted. Returning to menu.[/bold yellow]")
+                case "5":
+                    try:
+                        temperature_monitoring()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Temperature Monitoring interrupted. Returning to menu.[/bold yellow]")
+                case "6":
+                    try:
+                        manage_packages()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Package Management interrupted. Returning to menu.[/bold yellow]")
+                case "7":
+                    try:
+                        system_info()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]System Updates interrupted. Returning to menu.[/bold yellow]")
+                case "8":
+                    try:
+                        user_management()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]User Management interrupted. Returning to menu.[/bold yellow]")
+                case "9":
+                    try:
+                        run_custom_command()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Custom Command execution interrupted. Returning to menu.[/bold yellow]")
+                case "10":
+                    try:
+                        filter_processes()
+                    except KeyboardInterrupt:
+                        console.print("\n[bold yellow]Process Filtering interrupted. Returning to menu.[/bold yellow]")
+                case "11":
+                    console.print("[bold red]Exiting...[/bold red]")
+                    break
+            console.input("[bold yellow]Press Enter to return to the menu...[/bold yellow]")
+        except KeyboardInterrupt:
+            console.print("\n[bold yellow]Keyboard interrupt detected. Exiting the program...[/bold yellow]")
+            sys.exit()  
+        except Exception as e:
+            console.print(f"\n[bold red]An unexpected error occurred: {e}[/bold red]")
 
 if __name__ == "__main__":
     main()
