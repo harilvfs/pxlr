@@ -1,5 +1,7 @@
 myenv/
 
+MANIFEST.in
+
 prac.spec
 
 tui.spec
