@@ -1,2 +1,2 @@
 > [!WARNING]
-> Do not try this code on your main system please!!
+> Do not run this code on your main system please!!
