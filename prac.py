@@ -1,11 +1,4 @@
-import sys
-import os
-import platform
-import psutil
-import shutil
-import socket
-import subprocess
-import time
+import sys, os, platform, psutil, shutil, socket, subprocess, time
 from rich.console import Console
 from datetime import timedelta
 from rich.table import Table
