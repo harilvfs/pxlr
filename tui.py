@@ -8,7 +8,6 @@ from time import strftime
 console = Console()
 
 def render_header():
-    """Render the header with a modern look."""
     return Panel(
         "📜 [bold white on blue] Aayush's Modern Script TUI [/bold white on blue]",
         height=3,
@@ -17,7 +16,6 @@ def render_header():
     )
 
 def render_sidebar(selected_tab):
-    """Render the sidebar with tree-like navigation."""
     tree = Tree("🌲 [bold cyan]Workspaces[/bold cyan]")
     for workspace in ["Welcome", "Workspace 1", "Workspace 2", "Workspace 3"]:
         style = "yellow" if workspace != selected_tab else "green bold"
@@ -25,7 +23,6 @@ def render_sidebar(selected_tab):
     return Panel(tree, title="[bold blue]Navigation[/bold blue]", border_style="cyan", width=30)
 
 def render_main_content(selected_tab):
-    """Render main content based on the selected tab."""
     content_map = {
         "Welcome": "Welcome to your modern TUI!\n\nSelect an option from the sidebar.",
         "Workspace 1": "Workspace 1 Content:\n\nManage your first workspace here.",
@@ -41,7 +38,6 @@ def render_main_content(selected_tab):
     )
 
 def render_footer():
-    """Render the footer with time and user information."""
     current_time = strftime("%H:%M:%S")
     footer_content = f"[bold] {current_time} | Type 'exit' to quit [/bold]"
     return Panel(
@@ -51,7 +47,6 @@ def render_footer():
     )
 
 def main():
-    """Main function to render the modern TUI."""
     layout = Layout()
     layout.split(
         Layout(name="header", size=3),
